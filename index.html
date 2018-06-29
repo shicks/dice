@@ -32,7 +32,6 @@
 </div>
 <div id="dice"></div>
 <div id="bottom">
-  <input type="submit" value="none" id="none">
   <input type="submit" value="reroll" id="reroll">
   <input type="submit" value="discard" id="discard">
 </div>
@@ -64,11 +63,6 @@
     }
     if (target) target.classList.toggle('selected');
   });
-  document.getElementById('none').addEventListener('click', () => {
-    for (const die of document.getElementsByClassName('die')) {
-      die.classList.remove('selected');
-    }
-  });
   document.getElementById('reroll').addEventListener('click', () => {
     for (const die of document.getElementsByClassName('die')) {
       if (die.classList.contains('selected')) {
@@ -78,10 +72,14 @@
     }
   });
   document.getElementById('discard').addEventListener('click', () => {
+    const removed = [];
     for (const die of document.getElementsByClassName('die')) {
       if (die.classList.contains('selected')) {
-        die.remove();
+        removed.push(die);
       }
+    }
+    for (const die of removed) {
+      die.remove();
     }
   });
 </script>
