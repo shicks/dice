@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<style type="text/css">
+  #dice .die {
+    width: 3em;
+    height: 3em;
+    display: inline-block;
+    border: 1px solid black;
+    margin: 2em;
+    position: relative;
+    cursor: default;
+    user-select: none;
+  }
+  #dice .selected {
+    background: #fbfb8a
+  }
+  #dice .value {
+    font-size: 150%;
+    position: absolute;
+    top: 25%;
+    left: 40%;
+  }
+  #dice .size {
+    font-size: 80%;
+    position: absolute;
+    bottom: 0;
+    right: 2px;
+  }
+</style>
+<div id="top">
+  <input type="text" id="spec" value="2d6">
+  <input type="submit" value="roll" id="roll">
+</div>
+<div id="dice"></div>
+<div id="bottom">
+  <input type="submit" value="none" id="none">
+  <input type="submit" value="reroll" id="reroll">
+  <input type="submit" value="discard" id="discard">
+</div>
+<script type="text/javascript">
+  document.getElementById('roll').addEventListener('click', () => {
+    dice.innerHTML = '';
+    // parse the spec
+    const spec = document.getElementById('spec').value;
+    for (const term of spec.split(',')) {
+      const [n, d] = term.replace(/s+/g).split('d');
+      for (let i = 0; i < n; i++) {
+        const die = document.createElement('div');
+        die.classList.add('die');
+        const value = document.createElement('div');
+        value.classList.add('value');
+        const size = document.createElement('div');
+        size.classList.add('size');
+        die.appendChild(value);
+        die.appendChild(size);
+        size.textContent = d;
+        value.textContent = Math.floor(Math.random() * d + 1);
+        dice.appendChild(die);
+      }
+    }
+  });
+  document.getElementById('dice').addEventListener('click', ({target}) => {
+    while (target && !target.classList.contains('die')) {
+      target = target.parentElement;
+    }
+    if (target) target.classList.toggle('selected');
+  });
+  document.getElementById('none').addEventListener('click', () => {
+    for (const die of document.getElementsByClassName('die')) {
+      die.classList.remove('selected');
+    }
+  });
+  document.getElementById('reroll').addEventListener('click', () => {
+    for (const die of document.getElementsByClassName('die')) {
+      if (die.classList.contains('selected')) {
+        die.children[0].textContent = Math.floor(Math.random() * die.children[1].textContent + 1);
+        die.classList.remove('selected');
+      }
+    }
+  });
+  document.getElementById('discard').addEventListener('click', () => {
+    for (const die of document.getElementsByClassName('die')) {
+      if (die.classList.contains('selected')) {
+        die.remove();
+      }
+    }
+  });
+</script>

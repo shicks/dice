@@ -1,0 +1,3 @@
+# dice
+
+Simple die roller.
